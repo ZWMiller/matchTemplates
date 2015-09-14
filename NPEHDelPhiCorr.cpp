@@ -248,15 +248,14 @@ int myEvent(Pythia& pythia, vector<TH2D*> &histos2D, vector<TH3D*> &histos3D, do
       }
     
            
-      // At this point we have J/psi and mother B, the J/psi detectable in
-      // STAR.
-      // We require them to be stable, i.e. not decayed.
-      // Also impose pt cut on hadrons as in data.
+      // At this point we have NPE and mother, the NPE detectable in
+      // STAR. Also impose pt cut on hadrons as in data.
       vector<int> hadrons;
       vector<int> B_hadrons;
       
       for (int i = 1; i < event.size(); i++) {
-	if (event[i].isFinal() && event[i].isCharged() && event[i].pT() > 0.2 && isInAcceptanceH(i, event) && !(event[i].id()==event[ie].id())) {
+	if (event[i].isFinal() && event[i].isCharged() && event[i].pT() > 0.1 && isInAcceptanceH(i, event) && !(event[i].id()==event[ie].id()) &&
+	    (abs(event[i].id()) == 211 || abs(event[i].id()) == 321 || abs(event[i].id()) == 2212)) { /// Only pi, k, p
 	  hadrons.push_back(i);
 	  //	  if (event.isAncestor(i, i_B)) B_hadrons.push_back(i); // From Bingchu code, save in case needed later
 	}
@@ -337,7 +336,7 @@ bool isInAcceptanceH(int i, const Event& event)
 {
   // limit to STAR TPC/BEMC/ToF acceptance                                              
   double eta = event[i].eta();
-  if (fabs(eta) < 1)
+  if (fabs(eta) < 1.05)
     return true;
   else
     return false;
